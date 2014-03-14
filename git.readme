@@ -1,0 +1,6 @@
+git init
+vi .gitignore
+git add . [--all | *]
+git commit -m "initial"
+git add remote origin
+git push origin master
