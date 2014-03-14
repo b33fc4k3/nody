@@ -1,0 +1,11 @@
+{
+"name"         : "myNode",
+"version"      : "0.0.0",
+"description"  : "von Anfang bis Ende",
+"main"         : "server.js",
+"author"       : "isch",
+"dependencies" : {
+  "express"    : "latest",
+  "mongoose"   : "latest"
+  }
+}
