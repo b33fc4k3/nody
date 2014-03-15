@@ -1,1 +1,39 @@
+http://scotch.io/tutorials/javascript/creating-a-single-page-todo-app-with-node-and-angular
+http://scotch.io/tutorials/javascript/animating-angularjs-apps-ngview
+
 http://docs.nodejitsu.com/articles/HTTP/servers/how-to-create-a-HTTPS-server
+
+add auth
+users and posts
+add darker? background ...
+and then as needed change bootstraps font-color
+login single page with express-jwt token-auth
+automatically redirect to https server
+frontpage with todos read-only and login
+from login to real todo and blog and ... and ...
+also mongo persistent check that crap with mongo locking itself
+leave it a single page app !!!
+bower.json angular font-awesome
+... ... and ... ng-animate :D
+fixed user-role /api/authenticate token if user.name johndoe user.pass blub
+immernoch alles in einer datei halten bis ich klarkomme !?
+save tmux session
+start script sudo service cups stop ... avahi-daemon uwsgi
+ng-animate doesnt work because of angular.min.js ???
+
+
+## BSON PROBLEM SPEED DATABASE MONGO #################
+failed to load c++ bson extension ...
+https://stackoverflow.com/questions/21656420/failed-to-load-c-bson-extension
+When you installed the mongoose module by npm, it hasn't build bson module within it's forlder.  see the file 
+'node_modules/mongoose/node_modules/mongodb/node_modules/bson/ext/index.js 
+bson = require('../build/Release/bson');
+So just change it to
+bson = require('bson');
+and npm install bson
+
+why does mongo lock itself up?
+
+## HTTPS PROBLEM #####################################
+because my redirect ... redirected external angular and jquery requests o.O'
+

@@ -6,6 +6,13 @@
 "author"       : "isch",
 "dependencies" : {
   "express"    : "latest",
-  "mongoose"   : "latest"
+  "express-jwt" : "latest",
+  "passport" : "latest",
+  "passport-local" : "latest",
+  "mongoose"   : "latest",
+  "bson" : "latest",
+  "coffee-script" : "latest",
+  "underscore" : "latest",
+  "node-fs" : "latest"
   }
 }

@@ -18,29 +18,45 @@
 		<!--background-size:cover; -->
 		<!-- background: url('tile.png') repeat; -->
 		<!-- ohne ... cover -->
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
-	<style>
-		html 					{ overflow-y:scroll; }
-		#todo-list 				{ margin-bottom:30px; }
-		body {
-			padding-top:50px;
-			background: url('arches.png') repeat;
-		}
-	</style>
+		<!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"> -->
+		<!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/readable/bootstrap.min.css"> -->
+		<!-- per bower -->
+		<link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="custom.css">
 
 	<!-- SPELLS -->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+	<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> -->
+	<script src="libs/jquery/dist/jquery.min.js"></script>
+	<!-- <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-animate.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.js"></script> -->
+
+
+	<!-- You need to use at least the AngularJS 1.1.5 to witness ng-animate! -->
+	<!-- <script src="http://code.angularjs.org/1.2.13/angular.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-animate.js"></script> -->
+
+	<script src="libs/angular/angular.js"></script>
+	<script src="libs/angular-route/angular-route.js"></script>
+	<script src="libs/angular-animate/angular-animate.js"></script>
+
+
 	<script src="core.js"></script>
+	<!--<script src="app.js"></script>-->
 
 </head>
 <!-- SET THE CONTROLLER AND GET ALL TODOS -->
 <body ng-controller="mainController">
+	<!--<body ng-app="animateApp" ng-controller="mainController">-->
 	<div class="container">
 
 		<!-- HEADER AND TODO COUNT -->
 		<div class="jumbotron text-center">
 			<h1>I'm a Todo-aholic <span class="label label-info">{{ todos.length }}</span></h1>
+			<h3> {{ clock }} </h3>
+			<input type="text" class="form-control input-lg text-center" ng-model="person.name" placeholder="prim3" />
+			<h5>Well hello there ... {{ person.name }} ;)</h5>
 		</div>
 
 		<!-- TODO LIST -->
@@ -48,7 +64,7 @@
 			<div class="col-sm-4 col-sm-offset-4">
 
 				<!-- LOOP OVER THE TODOS IN $scope.todos -->
-				<div class="checkbox" ng-repeat="todo in todos">
+				<div class="checkbox" ng-repeat="todo in todos" ng-animate"{enter: 'animate-enter', leave: 'animate-leave'}">
 					<label>
 						<input type="checkbox" ng-click="deleteTodo(todo._id)"> {{ todo.text }}
 					</label>
@@ -72,8 +88,7 @@
 				</form>
 			</div>
 		</div>
-
 	</div>
-
+	<div class="page {{ pageClass }}" ng-view></div> <!-- here we load our different pages ... each by its controller -->
 </body>
 </html>
