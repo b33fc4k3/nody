@@ -12,7 +12,10 @@
   "mongoose"   : "latest",
   "bson" : "latest",
   "coffee-script" : "latest",
+  "js2coffee" : "latest",
   "underscore" : "latest",
-  "node-fs" : "latest"
+  "node-fs" : "latest",
+  "request" : "latest",
+  "cheerio" : "latest"
   }
 }

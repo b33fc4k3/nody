@@ -1,5 +1,6 @@
 # certificates ?
 *.pem
+*.csr
 
 node_modules
 public/libs

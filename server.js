@@ -7,6 +7,10 @@ var https    = require('https');
 var http     = require('http');
 var fs       = require('fs');
 
+// additionals for my scraping
+var request  = require('request');
+var cheerio  = require('cheerio');
+
 var httpPort  = 8080;
 var httpsPort = 8081;
 
@@ -14,16 +18,21 @@ var httpsPort = 8081;
 // TODO
 // express-jwt
 // coffeescript
+// keep it single-app with optional token login ... then able to post todos; to blog like app and system-administration (camera, starting daemons?)
 
 // https node-fs
 //http://www.gettingcirrius.com/2012/06/securing-nodejs-and-express-with-ssl.html !!!!
 //http://greengeckodesign.com/blog/2013/06/15/creating-an-ssl-certificate-for-node-dot-js/
 //http://www.benjiegillam.com/2012/06/node-dot-js-ssl-certificate-chain/
+//http://book.mixu.net/node/ch10.html
+//https://gist.github.com/youtalk/3216781
+//https://stackoverflow.com/questions/15813677/https-redirection-for-all-routes-node-js-express-security-concerns
+//https://stackoverflow.com/questions/7450940/automatic-https-connection-redirect-with-node-js-express
 var options = {
 	//key:  fs.readFileSync('key.pem'),
 	//cert: fs.readFileSync('cert.pem')
-	key:  fs.readFileSync('./privatekey.pem'),
-	cert: fs.readFileSync('./certificate.pem')
+	key:  fs.readFileSync('./certs/privatekey.pem'),
+	cert: fs.readFileSync('./certs/certificate.pem')
 	//ca:
 	//requestCert: true,
 	//rejectUnauthorized: false,
@@ -125,8 +134,10 @@ app.delete('/api/todos/:todo_id', function(req, res) {
 // ANGULAR =====================================================================
 // frontend
 // application -------------------------------------------------------------
+
+// express automatically loads file index.html in basedir aka ./public/
 app.get('/', function(req, res) {
-	res.sendfile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+	res.sendfile('./public/index_animate.html'); // load the single view file (angular will handle the page changes on the front-end)
 });
 
 //app.get('/', function(req, res) {
@@ -134,6 +145,13 @@ app.get('/', function(req, res) {
 //	//res.sendfile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
 //});
 
+app.get('/start', function(req, res) {
+	res.sendfile('./public/index.html');
+});
+
+app.get('/todo', function(req, res) {
+	res.sendfile('./public/index_todo.html');
+});
 
 app.get('/animate', function(req, res) {
 	res.sendfile('./public/index_animate.html');
@@ -142,6 +160,45 @@ app.get('/animate', function(req, res) {
 app.get('/info', function(req, res) {
 	console.log(req);
 });
+
+
+// WEBSCRAPING =================================================================
+// as seen here: http://scotch.io/tutorials/javascript/scraping-the-web-with-node-js
+
+app.get('/scrape', function(req, res){
+	url = 'http://www.imdb.com/title/tt1229340/';
+	request(url, function(error, response, html){
+		if(!error){
+			var $ = cheerio.load(html);
+			var title, release, rating;
+			var json = { title : "", release : "", rating : ""};
+
+			$('.header').filter(function(){
+		        	var data = $(this);
+		        	title = data.children().first().text();            
+       	                	release = data.children().last().children().text();
+		        	json.title = title;
+	                	json.release = release;
+	        	})
+
+            		$('.star-box-giga-star').filter(function(){
+	        		var data = $(this);
+	        		rating = data.text();
+	        		json.rating = rating;
+	        	})
+		}
+        // To write to the system we will use the built in 'fs' library.
+        // In this example we will pass 3 parameters to the writeFile function
+        // Parameter 1 :  output.json - this is what the created filename will be called
+        // Parameter 2 :  JSON.stringify(json, null, 4) - the data to write, here we do an extra step by calling JSON.stringify to make our JSON easier to read
+        // Parameter 3 :  callback function - a callback function to let us know the status of our function
+        fs.writeFile('output.json', JSON.stringify(json, null, 4), function(err){
+        	console.log('File successfully written! - Check your project directory for the output.json file');
+        })
+        // Finally, we'll just send out a message to the browser reminding you that this app does not have a UI.
+        res.send('Check your console!')
+	})
+})
 
 // listen (start app with node server.js) ======================================
 //var app = module.exports = express.createServer();
@@ -182,7 +239,8 @@ httpsServer.listen(httpsPort);
 
 //=======================================================================================
 // shout out to user
-console.log("App listening on port: " + httpPort + "\nHTTPS on: " + httpsPort);
+//console.log("App listening on port: " + httpPort + "\nHTTPS on: " + httpsPort);
+console.log("HTTP-Server (Proxy/Redirect) listening on:\t" + httpPort + "\nHTTPS-Server (App) listening on:\t\t" + httpsPort);
 
 app.listen(8070);
 
