@@ -46,6 +46,11 @@ var options = {
 //var app      = express.createServer(options); 								// create our app w/ express
 mongoose.connect('mongodb://localhost:27017/myNode'); 	// connect to mongoDB database on modulus.io
 
+// starter-node-angular ???
+// var db = require('./config/db'); // nope use my todo one
+// var port = process.env.PORT || 8080;
+//require('./app/routes')(app); // nope
+
 app.configure(function() {
 	app.use(express.static(__dirname + '/public')); 		// set the static files location /public/img will be /img for users
 	app.use(express.logger('dev')); 						// log every request to the console
@@ -115,6 +120,9 @@ app.post('/api/todos', function(req, res) {
 });
 
 // delete a todo
+// TODO
+// need to comment out before js2coffee -ing the file !!!
+// namespace conflict because of coffeescript's delete function
 app.delete('/api/todos/:todo_id', function(req, res) {
 	Todo.remove({
 		_id : req.params.todo_id
@@ -159,6 +167,10 @@ app.get('/animate', function(req, res) {
 
 app.get('/info', function(req, res) {
 	console.log(req);
+});
+
+app.get('/starter', function(req, res) {
+	res.sendfile('./public/index_starter.html');
 });
 
 

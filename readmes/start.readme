@@ -2,3 +2,7 @@ nodemon server.js
 forever start -w server.js
 forever nodemon --exitcrash server.js
 forever start -c nodemon server.js
+
+coffee server.coffee
+nodemon server.coffee
+nodemon --debug ./server.js 80

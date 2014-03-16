@@ -40,8 +40,14 @@ function mainController($scope, $http) {
 	};
 
 	// testing angular: http://www.ng-newsletter.com/posts/beginner2expert-data-binding.html
+	var dateOptions = {
+		weekday: "long", year: "numeric", month: "short",
+		day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit"
+	};
 	var updateClock = function() {
-    		$scope.clock = new Date();
+    		//$scope.clock = new Date();
+		var clock = new Date();
+		$scope.clock = clock.toLocaleDateString("de", dateOptions);
   	};
   	var timer = setInterval(function() {
     		$scope.$apply(updateClock);
