@@ -29,7 +29,7 @@ mainController = ($scope, $http) ->
   
   # delete a todo after checking it
   $scope.deleteTodo = (id) ->
-    $http.blub("/api/todos/" + id).success((data) ->
+    $http.delete("/api/todos/" + id).success((data) ->
       $scope.todos = data
       console.log data
       return

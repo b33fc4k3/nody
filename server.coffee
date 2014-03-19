@@ -173,7 +173,7 @@ app.post "/api/todos", (req, res) ->
 # TODO
 # need to comment out before js2coffee -ing the file !!!
 # namespace conflict because of coffeescript's delete function
-app.blub "/api/todos/:todo_id", (req, res) ->
+app.delete "/api/todos/:todo_id", (req, res) ->
   Todo.remove
     _id: req.params.todo_id
   , (err, todo) ->
