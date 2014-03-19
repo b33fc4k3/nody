@@ -6,3 +6,9 @@ forever start -c nodemon server.js
 coffee server.coffee
 nodemon server.coffee
 nodemon --debug ./server.js 80
+
+coffee --compile --watch . &; nodemon server.js
+
+
+# to automatically add pkg to package.json add --save:
+npm install <pkg> --save

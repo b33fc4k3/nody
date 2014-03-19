@@ -7,6 +7,8 @@
 # keep it single-app with optional token login ... then able to post todos; to blog like app and system-administration (camera, starting daemons?)
 # font-awesome ;)
 # keeping an eye on mongodb ... so it will never ever crash again (sudo rm /var/lib mongo.lock)
+# package.json main -> nodemon server.coffee ... also forever start on boot log to file, tail -f
+# free up space lol ... remove all those comments, now that it does work (most of it aint working in new 3. express anyway)
 
 # _______________________________________________________________________________________
 # set up
@@ -22,6 +24,10 @@ http = require("http")
 request = require("request")
 cheerio = require("cheerio")
 fs = require("fs")
+
+# beautiful logging
+expressWinston = require('express-winston')
+winston = require('winston')
 
 httpPort = 8080
 httpsPort = 8081
@@ -61,6 +67,8 @@ mongoose.connect "mongodb://localhost:27017/myNode" # connect to mongoDB databas
 #
 # order of configuration is important!!!
 # if i put logger before static it will log requests for static files aswell
+# also should be definitely put before router middleware !!!
+# even better winston
 app.configure ->
   app.use express.logger("dev") # log every request to the console
   app.use express.static(__dirname + "/public") # set the static files location /public/img will be /img for users
@@ -74,7 +82,8 @@ app.configure ->
   #testweise
   #app.use(express.session( { secret: 'mrieger' } ));
   #app.use(express.cookieParser());
-  #app.use(app.router);
+  #app.use(app.router)
+
   return
 
 #httpsServer.configure(function() {
@@ -139,7 +148,7 @@ app.delete "/api/todos/:todo_id", (req, res) ->
     _id : req.params.todo_id
   , (err, todo) ->
     res.send err if err
-      # get and return all the todos after you create another
+    # get and return all the todos after you create another
     Todo.find (err, todos) ->
       res.send err if err
       res.json todos
@@ -241,33 +250,28 @@ app.get "/scrape", (req, res) ->
 #// set up server to listen on httpPort and redirect anyone to https-express-app
 httpProxy = express()
 httpProxy.get "*", (req, res) ->
-  res.redirect "https://localhost:8081" + req.url
+	#res.redirect "https://localhost:8081" + req.url
+  res.redirect "https://marten.uk.to:8081" + req.url
   return
 
 httpProxy.listen httpPort
 
-# // TODO
-# // those two together serve node and mongo
-# // why does https not serve!??
 # var httpProxy = http.createServer(app);
 # httpProxy.listen(httpPort);
-
 #//=======================================================================================
 #// start up app server
 httpsServer = https.createServer(options, app)
-
 #https.createServer(options, function(req, res) {
 #	app.handle(req, res);
 #}).listen(httpsPort);
 httpsServer.listen httpsPort
-
 #//var httpsServer = express();
 
 #=======================================================================================
 # shout out to user
 #console.log("App listening on port: " + httpPort + "\nHTTPS on: " + httpsPort);
 console.log "HTTP-Server (Proxy/Redirect) listening on:\t" + httpPort + "\nHTTPS-Server (App) listening on:\t\t" + httpsPort
-app.listen 8070
+#app.listen 80
 exports = module.exports = app # expose app
 
 #http.createServer(app).listen(8070);

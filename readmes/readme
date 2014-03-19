@@ -37,3 +37,97 @@ why does mongo lock itself up?
 ## HTTPS PROBLEM #####################################
 because my redirect ... redirected external angular and jquery requests o.O'
 
+
+https redirect as seen here:
+http://stackoverflow.com/questions/15813677/https-redirection-for-all-routes-node-js-express-security-concerns
+http://stackoverflow.com/questions/7450940/automatic-https-connection-redirect-with-node-js-express
+http://stackoverflow.com/questions/10697660/force-ssl-with-expressjs-3
+
+01. does work ... but https doesnt serve mongo and animate, only static
+var http = express.createServer();
+http.get('*',function(req,res){  
+    //res.redirect('https://marten.uk.to'+req.url)
+    res.redirect('https://localhost:8081'+req.url)
+})
+http.listen(8080);
+
+02.
+function requireHTTPS(req, res, next) {
+    if (!req.secure) {
+        //FYI this should work for local development as well
+        return res.redirect('https://' + req.get('host') + req.url);
+    }
+    next();
+}
+app.use(requireHTTPS);
+
+03.
+app.use(function(req, res, next) {
+  if(!req.secure) {
+    return res.redirect(['https://', req.get('Host'), req.url].join(''));
+  }
+  next();
+});
+
+
+https node-fs
+http://www.gettingcirrius.com/2012/06/securing-nodejs-and-express-with-ssl.html !!!!
+http://greengeckodesign.com/blog/2013/06/15/creating-an-ssl-certificate-for-node-dot-js/
+http://www.benjiegillam.com/2012/06/node-dot-js-ssl-certificate-chain/
+http://book.mixu.net/node/ch10.html
+https://gist.github.com/youtalk/3216781
+https://stackoverflow.com/questions/15813677/https-redirection-for-all-routes-node-js-express-security-concerns
+https://stackoverflow.com/questions/7450940/automatic-https-connection-redirect-with-node-js-express
+
+beautiful logging
+https://github.com/heapsource/express-winston
+https://stackoverflow.com/questions/5489815/logging-in-express-js-to-a-output-file
+http://docs.nodejitsu.com/articles/intermediate/how-to-log
+http://www.heise.de/developer/artikel/Aufgezeichnet-Protokollieren-mit-Node-js-1929434.html
+
+
+PRODUCTION VS DEVELOPMENT:
+as seen here:
+https://stackoverflow.com/questions/10714315/node-js-express-and-using-development-versus-production-in-app-configure
+
+app.set('title', 'My Application');
+app.configure('development', function() {
+	app.use logger
+	app.set winston
+	app.set db uri ..
+}
+ syntax sugar for:
+if ('development' == app.get('env')) {
+	  app.set('db uri', 'localhost/dev');
+}
+
+node app.js REDIS_HOST REDIS_PORT
+app.configure('development', function(){
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+  var r = require("redis").createClient(process.argv[2], process.argv[3]);
+});
+app.configure('production', function(){
+  app.use(express.errorHandler());
+  var r = require("redis").createClient(process.argv[2], process.argv[3], { detect_buffers: true });
+});
+I just leave NODE_ENV=development in the dev machine's ~/.profile (.bashrc or bash_profile on linux), and do the same for production ones.
+
+oder:
+var env = process.argv[2] || process.env.NODE_ENV || 'development'
+var mongourl = process.argv[3] || process.env.NODE_DB || 'mongodb://localhost/default'
+var port = process.env.PORT || 9001
+
+oder:
+// config.json
+{
+  "development": {
+    "redisPort": 6379,
+    "redisHost": "127.0.0.1",
+    "errorHandlerOptions": {"dumpExceptions": true, "showStack": true}
+  },
+  "production": {
+    "redisPort": 6379,
+    "redisHost": "46.137.195.230",
+    "errorHandlerOptions": {"dumpExceptions": false, "showStack": false}
+  }
+}
