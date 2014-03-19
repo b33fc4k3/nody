@@ -1,3 +1,7 @@
+// problem js2coffee -ing this file:
+// converting ./public/auth.client.js to ./public/auth.client.coffee
+// SyntaxError: missing ; before statement
+
 var myApp = angular.module('myApp', []);
 
 //this is used to parse the profile
