@@ -131,3 +131,9 @@ oder:
     "errorHandlerOptions": {"dumpExceptions": false, "showStack": false}
   }
 }
+
+gzip requests and responses
+https://stackoverflow.com/questions/8880741/node-js-easy-http-requests-with-gzip-deflate-compression
+
+good request
+https://github.com/mikeal/request

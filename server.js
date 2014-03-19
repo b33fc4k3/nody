@@ -18,6 +18,11 @@ var flash = require('connect-flash');
 var bcrypt = require('bcrypt-nodejs');
 require('./passport')(passport);
 
+// token based authentication
+var expressJwt = require('express-jwt');
+var jwt = require('jsonwebtoken');
+var secret = 'blub-bla-foo-bar';
+
 // beautiful logging
 var expressWinston = require('express-winston');
 var winston = require('winston');
@@ -38,14 +43,21 @@ var app = module.exports = express();
 
 // fetching keys with node-fs
 var options = {
+	// KEYS FOR HTTPS
+	// ASYNC WAY FASTER AND JAVASCRIPT STYLE BUT DOESNT WORK HERE
 	key:  fs.readFileSync('./certs/privatekey.pem'),
-	cert: fs.readFileSync('./certs/certificate.pem')
+	cert: fs.readFileSync('./certs/certificate.pem'),
 	//ca:
 	//requestCert: true,
 	//rejectUnauthorized: false,
 	//passphrase: "mrieger"
+	
+	// disable CONCURRENT SOCKETS = 5 (eats more cpu and ram though)
+	agent: false
 };
 
+// compress all req's and res's (above routes and static handlers!)
+app.use(express.compress());
 app.use(express.static(__dirname + '/public'));
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -61,18 +73,24 @@ app.use(express.session({secret: '@*lCa0s!'}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+
+// token based ...
+app.use('/hiding', expressJwt({secret: secret}));
+app.use(express.json());
+app.use(express.urlencoded());
+
 //app.use(app.router);
 
 // beautiful logging:
 // before routing
-app.use(expressWinston.logger({
-    transports: [
-      new winston.transports.Console({
-        json: true,
-        colorize: true
-      })
-    ]
-}));
+//app.use(expressWinston.logger({
+//    transports: [
+//      new winston.transports.Console({
+//        json: true,
+//        colorize: true
+//      })
+//    ]
+//}));
 app.use(app.router);
 // after routing
 app.use(expressWinston.errorLogger({
@@ -183,6 +201,12 @@ app.get('/start', function(req, res) {
 });
 
 app.get('/todo', function(req, res) {
+	// trying out cookie session manager
+	if (req.session.lastPage) {
+		//res.write('Last page was: ' + req.session.lastPage + '! ');
+		console.log('Last page was: ' + request.pathname + '! ');
+	}
+	req.session.lastPage = '/todo';
 	res.sendfile('./public/index_todo.html');
 });
 
@@ -195,6 +219,12 @@ app.get('/info', function(req, res) {
 });
 
 app.get('/starter', function(req, res) {
+	// trying out cookie session manager
+	if (req.session.lastPage) {
+		//res.write('Last page was: ' + req.session.lastPage + '! ');
+		console.log('Last page was: ' + req.session.lastPage + '! ');
+	}
+	req.session.lastPage = '/starter';
 	res.sendfile('./public/index_starter.html');
 });
 
@@ -235,6 +265,43 @@ app.get('/scrape', function(req, res){
         res.send('Check your console!')
 	})
 })
+
+
+//---------------------------------------------------------------------------------------
+// token based authentication
+
+app.get('/token', function(req, res) {
+	res.sendfile('./public/token.html');
+});
+
+
+app.post('/authenticate', function (req, res) {
+  //TODO validate req.body.username and req.body.password
+  //if is invalid, return 401
+  if (!(req.body.username === 'marten' && req.body.password === 'rieger')) {
+    res.send(401, 'Wrong user or password');
+    return;
+  }
+
+  var profile = {
+    first_name: 'John',
+    last_name: 'Doe',
+    email: 'john@doe.com',
+    id: 123
+  };
+
+  // We are sending the profile inside the token
+  var token = jwt.sign(profile, secret, { expiresInMinutes: 60*5 });
+
+  res.json({ token: token });
+});
+
+app.get('/hiding/restricted', function (req, res) {
+  console.log('user ' + req.user.email + ' is calling /hiding/restricted');
+  res.json({
+    name: 'foo'
+  });
+});
 
 //_______________________________________________________________________________________
 // START UP APP SERVER
