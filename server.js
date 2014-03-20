@@ -34,6 +34,9 @@ var winston = require('winston');
 // expose here??????
 var app = module.exports = express();
 
+var bla = {
+
+}
 
 // var db = require('./config/db'); // nope use my todo one
 //require('./app/routes')(app); // nope
@@ -56,10 +59,17 @@ var options = {
 	agent: false
 };
 
+var logFile = fs.createWriteStream('./logFile.log', {flags: 'a'}); // a append, w write
+//var logFormat
+
 // compress all req's and res's (above routes and static handlers!)
 app.use(express.compress());
 app.use(express.static(__dirname + '/public'));
-app.use(express.logger('dev'));
+//app.use(express.logger('dev'));
+app.use(express.responseTime());
+app.use(express.logger({stream: logFile, format: '[:date] :remote-addr => :method :url -- :status :res[content-lenght] ":referrer" ":user-agent" [:response-time ms]'}));
+//app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+//app.use(customLogger);
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.set('view.engine', 'ejs');
@@ -95,12 +105,20 @@ app.use(app.router);
 // after routing
 app.use(expressWinston.errorLogger({
     transports: [
-      new winston.transports.Console({
+      new (winston.transports.Console)({
         json: true,
         colorize: true
-      })
+      }),
+	  new (winston.transports.File)({filename: 'express-winston.log'})
     ]
 }));
+
+var customLogger = new (winston.Logger)({
+	transports: [
+		new (winston.transports.Console)(),
+    		new (winston.transports.File)({filename: 'winston.log'})
+	]
+});
 
 var httpPort  = 8080;
 var httpsPort = 8081;
@@ -212,6 +230,10 @@ app.get('/todo', function(req, res) {
 
 app.get('/animate', function(req, res) {
 	res.sendfile('./public/index_animate.html');
+});
+
+app.get('/animate2', function(req, res) {
+	res.sendfile('./public/index_animate20.html');
 });
 
 app.get('/info', function(req, res) {

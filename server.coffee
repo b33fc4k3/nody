@@ -28,9 +28,13 @@ expressWinston = require("express-winston")
 winston = require("winston")
 
 # TODO
-# express-jwt
 # coffeescript
 # keep it single-app with optional token login ... then able to post todos; to blog like app and system-administration (camera, starting daemons?)
+# literate coffeescript ... literate node
+# readmes in markdown
+# vim tabstop = 2
+# mobile view
+# forever but nodemon like logging in file ... tail -f with color!???
 # expose here??????
 app = module.exports = express()
 

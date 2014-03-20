@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# as seen here:
+# https://stackoverflow.com/questions/14091818/converting-whole-project-to-coffeescript-with-js2coffee
+
 for FILE in `find . -name "*.js" -type f -o -path './node_modules' -prune -o -path './components' -prune -o -path ./public/libs -prune`
 do 
     if [ -e $FILE ] ; then        

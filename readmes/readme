@@ -137,3 +137,27 @@ https://stackoverflow.com/questions/8880741/node-js-easy-http-requests-with-gzip
 
 good request
 https://github.com/mikeal/request
+
+
+template engine:
+jade !?
+erb like backbone ?
+mustache (mu, milk)
+haml
+backbone static templates ejs 
+ejs
+
+logging:
+http://www.senchalabs.org/connect/logger.html
+var fs = require('fs');
+var access_logfile = fs.createWriteStream('./access.log', {flags: 'a'});
+app.use(express.logger({stream: access_logfile }));
+
+forever -e error.log start app.js
+forever -o output.log -e error.log start app.js
+
+
+mobile view:
+modernizr
+detect-mobile
+http://therockncoder.blogspot.de/2013/11/mobile-device-detection-and-redirection.html
