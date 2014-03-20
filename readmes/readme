@@ -140,6 +140,10 @@ https://github.com/mikeal/request
 
 
 template engine:
+https://stackoverflow.com/questions/1787716/is-there-a-template-engine-for-node-js
+hamljs, haml-coffee (jade is pretty much the same!??)
+https://github.com/joyent/node/wiki/modules#templating (outdated?)
+https://github.com/visionmedia/express/wiki#template-engines (up-to-date!)
 jade !?
 erb like backbone ?
 mustache (mu, milk)

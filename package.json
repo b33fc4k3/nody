@@ -6,16 +6,24 @@
   "author": "isch",
   "dependencies": {
     "express": "latest",
+
     "jade": "latest",
     "ejs": "latest",
+	"hamljs": "latest",
+	"hamljs-coffee": "latest",
+	"haml-coffee": "latest",
+	"mustache": "latest",
+
     "express-jwt": "latest",
     "jsonwebtoken": "latest",
     "passport": "latest",
     "passport-local": "latest",
     "connect-flash": "latest",
     "bcrypt-nodejs": "latest",
+
     "mongoose": "latest",
     "bson": "latest",
+
     "coffee-script": "latest",
     "js2coffee": "latest",
     "underscore": "latest",
